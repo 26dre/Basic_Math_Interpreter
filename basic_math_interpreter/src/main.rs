@@ -9,84 +9,19 @@ const DIVIDE: char = '/';
 const MINUS: char = '-';
 const PERIOD: char = '.';
 
-// static mut ACCUMULATOR: usize = 0;
 
 fn main() {
-    // let should_fail = String::from("Hello world");
-    // let should_work = String::from("hhhh123j");
-    // let should_work_array : Vec<char> = should_work.chars().collect();
-    // let idx = 4;
-    // let x = make_number(&should_work_array, idx);
-    // println!("{x}");
 
     let input_string = String::from("10+20*(10+3)");
     let ret_val = parse_perfect_input(&input_string);
     println!("{}", ret_val[0]);
-    // let mut x = 100;
-    // next(&mut x);
 
-    // unsafe{
-    //     ACCUMULATOR += 10;
-    //     print!("{ACCUMULATOR}");
-    // }
-
-    //    should_work: Vec<char> = should_work.chars().collect();
 }
-
-// fn parse(s: &String, idx: usize) -> Option<Vec<i32>>{
-//     let mut result_vector:Option<Vec<i32>> = None;
-//     let mut
-
-//     while idx< s.len(){
-//         if
-//     }
-
-//     result_vector
-
-// }
-
-// fn expression(s:&String, mut idx: usize){
-
-// // }
-// fn expression(){
-
-// }
-
-// fn parse(input_str: &String) -> Vec<isize> {
-//     let ret_vec: Vec<isize> = Vec::new();
-//     // let str_vec = input_str.chars().collect();
-//     let str_vec: Vec<char> = input_str.chars().collect();
-
-//     for character in str_vec {
-//         if (!character.is_whitespace()){
-//             expression()
-//         }
-//     }
-
-//     ret_vec
-// }
 
 fn next(curr_idx: &mut usize) {
     *curr_idx += 1;
 }
 
-// fn handle_whitespace_not_period(curr_idx: &mut usize) {
-//     next(curr_idx);
-// }
-
-// fn handle_whitespace_period(curr_idx: &mut usize) -> bool
-
-// fn check_and_handle_whitespace(char_vector: Vec<char>, curr_idx: &mut usize) {
-//     // let curr_char = char_vector.get(*curr_idx);
-//     let curr_char = char_vector[*curr_idx];
-//     if curr_char.is_whitespace() {
-//         if curr_char == '.' {
-//             next(curr_idx);
-//         } else {
-//             handle_whitespace_not_period(curr_idx)
-//         }
-//     }
-// }
 
 fn match_chars(curr_char: &char, char_to_match: &char) {
     if curr_char != char_to_match {
@@ -139,7 +74,7 @@ fn expression_perfect(char_vec: &Vec<char>, curr_idx: &mut usize) -> isize {
 fn term_perfect(char_vec: &Vec<char>, curr_idx: &mut usize) -> usize {
     let mut val: usize = factor_perfect(char_vec, curr_idx);
     while *curr_idx < char_vec.len()
-        && (char_vec[*curr_idx] == TIMES 
+        && (char_vec[*curr_idx] == TIMES
             || char_vec[*curr_idx] == DIVIDE
             || char_vec[*curr_idx].is_whitespace())
     {
@@ -158,7 +93,7 @@ fn term_perfect(char_vec: &Vec<char>, curr_idx: &mut usize) -> usize {
 }
 
 fn factor_perfect(char_vec: &Vec<char>, curr_idx: &mut usize) -> usize {
-    while char_vec.len() > *curr_idx && char_vec[*curr_idx].is_whitespace(){
+    while char_vec.len() > *curr_idx && char_vec[*curr_idx].is_whitespace() {
         next(curr_idx);
     }
     if char_vec[*curr_idx].is_numeric() {
@@ -166,9 +101,11 @@ fn factor_perfect(char_vec: &Vec<char>, curr_idx: &mut usize) -> usize {
     } else if char_vec[*curr_idx] == OPENING_PAREN {
         next(curr_idx);
         let temp = expression_perfect(char_vec, curr_idx);
-        while char_vec.len() > *curr_idx && char_vec[*curr_idx].is_whitespace(){
+        while char_vec.len() > *curr_idx && char_vec[*curr_idx].is_whitespace() {
             next(curr_idx);
         }
+
+        // if (*curr_idx)
         match_chars(&char_vec[*curr_idx], &CLOSING_PAREN);
         temp.try_into().unwrap()
         // next(curr_idx);
@@ -240,27 +177,36 @@ mod tests {
     }
 
     #[test]
-    fn negative_number_result(){
+    fn negative_number_result() {
         let test_str = String::from("25-100");
         let result = parse_perfect_input(&test_str)[0];
         assert_eq!(result, -75);
     }
     #[test]
-    fn imperfect_input_addition_sub(){
+    fn imperfect_input_addition_sub() {
         let test_str = String::from("25    - 100");
         let result = parse_perfect_input(&test_str)[0];
         assert_eq!(result, -75);
-    }// fn works2
+    } // fn works2
     #[test]
-    fn imperfect_multiplication(){
+    fn imperfect_multiplication() {
         let test_str = String::from("25    * 100");
         let result = parse_perfect_input(&test_str)[0];
         assert_eq!(result, 2500);
-    }// fn works2
+    } // fn works2
     #[test]
-    fn imperfect_parentheses(){
+    fn imperfect_parentheses() {
         let test_str = String::from("25    + 100+ (       2*2     )");
         let result = parse_perfect_input(&test_str)[0];
         assert_eq!(result, 129);
-    }// fn works2
+    }
+    #[test]
+    fn extra_shit() {
+        let test_str = String::from("25    + 100+ (       2*2     ). 22");
+        let result = parse_perfect_input(&test_str)[0];
+        let res_2 = parse_perfect_input(&test_str)[1];
+        //this line ends up being out of bounds so gotta fix that shit
+        assert_eq!(result, 129);
+        assert_eq!(res_2, 22);
+    }
 }
