@@ -1,4 +1,3 @@
-
 use std::char;
 const CLOSING_PAREN: char = ')';
 const OPENING_PAREN: char = '(';
@@ -8,6 +7,27 @@ const DIVIDE: char = '/';
 const MINUS: char = '-';
 const PERIOD: char = '.';
 
+pub fn parse_perfect_input(s: &String) -> Vec<isize> {
+    let mut ret_vec: Vec<isize> = Vec::new();
+
+    let char_vector: Vec<char> = s.chars().collect();
+    let mut curr_idx = 0;
+
+    while curr_idx < char_vector.len() {
+
+        if char_vector[curr_idx] == PERIOD{
+            next(&mut curr_idx);
+        }
+        println!("{curr_idx} whcih points to {}", char_vector[curr_idx]);
+        let ret_val = expression_perfect(&char_vector, &mut curr_idx);
+        println!("{ret_val}");
+        ret_vec.push(ret_val);
+        
+    }
+
+    ret_vec
+}
+
 fn next(curr_idx: &mut usize) {
     *curr_idx += 1;
 }
@@ -16,26 +36,6 @@ fn match_chars(curr_char: &char, char_to_match: &char) {
     if curr_char != char_to_match {
         panic!("Syntax incorrect, this output is unreadable")
     }
-}
-
-pub fn parse_perfect_input(s: &String) -> Vec<isize> {
-    let mut ret_vec: Vec<isize> = Vec::new();
-
-    let char_vector: Vec<char> = s.chars().collect();
-    let mut curr_idx = 0;
-    let ret_val = expression_perfect(&char_vector, &mut curr_idx);
-    println!("{ret_val}");
-
-    // while curr_idx < char_vector.len() && curr_idx == PERIOD{
-    //     next(&mut curr_idx);
-
-    // }
-
-    
-    
-
-    ret_vec.push(ret_val);
-    ret_vec
 }
 
 fn expression_perfect(char_vec: &Vec<char>, curr_idx: &mut usize) -> isize {
@@ -57,6 +57,7 @@ fn expression_perfect(char_vec: &Vec<char>, curr_idx: &mut usize) -> isize {
             next(curr_idx);
             val -= term_perfect(char_vec, curr_idx) as isize;
         } else if char_vec[*curr_idx] == PERIOD {
+            next(curr_idx);
             return val;
         } else {
             // panic!("TF bro! Bad input prob white space or smth fr fr idk how u ended up here");
@@ -103,6 +104,7 @@ fn factor_perfect(char_vec: &Vec<char>, curr_idx: &mut usize) -> usize {
 
         // if (*curr_idx)
         match_chars(&char_vec[*curr_idx], &CLOSING_PAREN);
+        next(curr_idx);
         temp.try_into().unwrap()
         // next(curr_idx);
         //at this point the function should properly return the value that it has received
