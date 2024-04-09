@@ -6,32 +6,27 @@ const OPENING_PAREN: char = '(';
 const PLUS: char = '+';
 const TIMES: char = '*';
 
+static mut ACCUMULATOR: usize = 0;
+
 fn main() {
-    println!("Hello, world!");
-    println!("Lets see if this appears in the git file");
+    // let should_fail = String::from("Hello world");
+    // let should_work = String::from("hhhh123j");
+    // let should_work_array : Vec<char> = should_work.chars().collect();
+    // let idx = 4;
+    // let x = make_number(&should_work_array, idx);
+    // println!("{x}");
 
-    let x = String::from("Hello bitches");
+    let input_string = String::from("123*124");
+    parse_perfect_input(&input_string);
+    // let mut x = 100;
+    // next(&mut x);
 
-    let thing = x.as_bytes();
+    // unsafe{
+    //     ACCUMULATOR += 10;
+    //     print!("{ACCUMULATOR}");
+    // }
 
-    let x_array: Vec<char> = x.chars().collect();
-    // let x_len = x_array.len();
-
-    // parse(&x);
-    let mut i = 0;
-
-    while i < x_array.len() {
-        println!("{i}: {}", x_array[i]);
-        next(&mut i);
-    }
-
-    let characters = x.char_indices();
-    for c in characters {
-        println!("{}, {}", c.0, c.1);
-    }
-
-    let j = thing[2];
-    println!("{}", j as char);
+    //    should_work: Vec<char> = should_work.chars().collect();
 }
 
 // fn parse(s: &String, idx: usize) -> Option<Vec<i32>>{
@@ -99,33 +94,36 @@ fn parse_perfect_input(s: &String) -> Vec<isize> {
     let ret_vec: Vec<isize> = Vec::new();
 
     let char_vector: Vec<char> = s.chars().collect();
+    let mut curr_idx = 0;
+    expression_perfect(&char_vector, &mut curr_idx);
 
     ret_vec
 }
 
-fn expression_perfect(char_vec: &Vec<char>, mut curr_idx: usize) {
+fn expression_perfect(char_vec: &Vec<char>, curr_idx: &mut usize) {
     term_perfect(char_vec, curr_idx);
-    while (char_vec[curr_idx] == PLUS) {
-        next(&mut curr_idx);
+    while *curr_idx < char_vec.len() && char_vec[*curr_idx] == PLUS {
+        println!("Inside while ctrl flow with curr_idx val of {}", *curr_idx);
+        next(curr_idx);
         term_perfect(char_vec, curr_idx);
     }
 }
 
-fn term_perfect(char_vec: &Vec<char>, mut curr_idx: usize) {
+fn term_perfect(char_vec: &Vec<char>, curr_idx: &mut usize) {
     factor_perfect(char_vec, curr_idx);
-    while (char_vec[curr_idx] == TIMES) {
-        next(&mut curr_idx);
+    while *curr_idx < char_vec.len() && char_vec[*curr_idx] == TIMES {
+        next(curr_idx);
         factor_perfect(char_vec, curr_idx);
     }
 }
-fn factor_perfect(char_vec: &Vec<char>, mut curr_idx: usize) {
-    if char_vec[curr_idx].is_numeric() {
+fn factor_perfect(char_vec: &Vec<char>, curr_idx: &mut usize) {
+    if char_vec[*curr_idx].is_numeric() {
         make_number(char_vec, curr_idx);
-    } else if char_vec[curr_idx] == OPENING_PAREN {
-        next(&mut curr_idx);
+    } else if char_vec[*curr_idx] == OPENING_PAREN {
+        next(curr_idx);
         expression_perfect(char_vec, curr_idx);
-        match_chars(&char_vec[curr_idx], &CLOSING_PAREN);
-        next(&mut curr_idx);
+        match_chars(&char_vec[*curr_idx], &CLOSING_PAREN);
+        next(curr_idx);
         //at this point the function should properly return the value that it has received
         // I will implement this functionality later
     } else {
@@ -133,15 +131,16 @@ fn factor_perfect(char_vec: &Vec<char>, mut curr_idx: usize) {
     }
 }
 
-fn make_number(char_vec: &Vec<char>, mut curr_idx: usize) -> usize {
+fn make_number(char_vec: &Vec<char>, curr_idx: &mut usize) -> usize {
     let mut ret_num = 0;
-    while char_vec[curr_idx].is_numeric() {
+    while *curr_idx < char_vec.len() && char_vec[*curr_idx].is_numeric() {
         ret_num *= 10;
-        ret_num += char_vec[curr_idx]
+        ret_num += char_vec[*curr_idx]
             .to_digit(10)
             .expect("Value out of bounds");
-        next(&mut curr_idx);
+        next(curr_idx);
     }
 
+    println!("About to return the number {ret_num}");
     ret_num as usize
 }
