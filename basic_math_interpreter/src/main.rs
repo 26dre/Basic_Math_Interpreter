@@ -6,9 +6,6 @@ const OPENING_PAREN: char = '(';
 const PLUS: char = '+';
 const TIMES: char = '*';
 
-
-
-
 fn main() {
     println!("Hello, world!");
     println!("Lets see if this appears in the git file");
@@ -124,7 +121,7 @@ fn term_perfect(char_vec: &Vec<char>, mut curr_idx: usize) {
 fn factor_perfect(char_vec: &Vec<char>, mut curr_idx: usize) {
     if char_vec[curr_idx].is_numeric() {
         make_number(char_vec, curr_idx);
-    } else if char_vec[curr_idx] == OPENING_PAREN{
+    } else if char_vec[curr_idx] == OPENING_PAREN {
         next(&mut curr_idx);
         expression_perfect(char_vec, curr_idx);
         match_chars(&char_vec[curr_idx], &CLOSING_PAREN);
