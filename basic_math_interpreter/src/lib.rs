@@ -76,9 +76,10 @@ mod tests {
     fn extra_shit() {
         let test_str = String::from("25    + 100+ (       2*2     ). 22");
         let result = parse_perfect_input(&test_str)[0];
-        // let res_2 = parse_perfect_input(&test_str)[1];
+        let res_2 = parse_perfect_input(&test_str)[1];
         //this line ends up being out of bounds so gotta fix that shit
         assert_eq!(result, 129);
-        // assert_eq!(res_2, 22);
+        assert_eq!(res_2, 22);
     }
+    
 }
